@@ -1,0 +1,362 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/plugins/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/blog.css">
+    <script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.all.min.js"> </script>
+    <script type="text/javascript" charset="utf-8" src="/ueditor/lang/zh-cn/zh-cn.js"> </script>
+</head>
+<body>
+<% if(userSession){%>
+<div class="container-fluid " style="background-color: #48525e">
+    <header>
+        <nav class="navbar" role="navigation" style="margin-bottom: -20px;height: 50px;z-index: 1000">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle btn-sheng" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#" style="color: white;">微博首页</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class=" navbar-collapse navbar-ex1-collapse hidden-xs">
+                <div class="btn-group pull-right " style="margin-top: 1px">
+                    <button type="button" class="btn btn-default btn-lg btn-menu-icon"><span class="glyphicon glyphicon-search"></span>
+                        <form action="" method="POST" role="form" class="blog_search btn-menu-hide wrak" >
+                            <div class="form-group">
+                                <label for="1"></label>
+                                <input type="text" class="form-control" name="" id="1" placeholder="Input..." style="width: 204px;margin-top: -18px;">
+                                <span class="glyphicon glyphicon-arrow-right" style="position: absolute;top: 38px;right: 9px;color: #999"></span>
+                            </div>
+                        </form>
+                    </button>
+                    <button type="button" class="btn btn-default btn-lg btn-menu-icon"><span class="glyphicon glyphicon-star"></span>
+                        <form action="" method="POST" role="form" class="blog_collect btn-menu-hide wrak" >
+                            <div class="form-group">
+                                <p>
+                                    <label for="2">标题</label>
+                                    <input type="text" class="form-control" name="" id="2" placeholder="Input..." style="">
+                                </p>
+                                <p>
+                                    <label for="3">网址</label>
+                                    <input type="text" class="form-control" name="" id="3" placeholder="Input..." style="">
+                                </p>
+                                <p>
+                                    <label for="4">标签</label>
+                                    <input type="text" class="form-control" name="" id="4" placeholder="Input..." style="">
+                                </p>
+                                <p>
+                                    <label for="5">备注</label>
+                                    <input type="text" class="form-control" name="" id="5" placeholder="Input..." style="">
+                                </p>
+                            </div>
+                        </form>
+                    </button>
+                    <a href="/blogEdits" class="btn btn-default btn-lg btn-menu-icon"><span class="glyphicon glyphicon-pencil"></span>
+
+                    </a>
+                    <button type="button" class="btnnod btn-default btn-lg btn-menu-icon"><img src=<%=imgUrl%> alt="" width="25" height="25" >
+                        <div class="user_edit btn-menu-hide wrak">
+                            <div class="user_edit_no" style="height:146px">
+                                <div style="margin-top: 15px;position: relative">
+                                    <a style="position: absolute;top: 5px;left: 20px" data-toggle="modal" href="#modal_tx"><img src=<%=imgUrl%> alt="" width="100" height="100"></a>
+
+                                    <a href="/blog/user" style="position: absolute;top: 5px;right: 20px;"><%=userSession %></a>
+
+                                    <a class="destroySession" style="position: absolute;top: 55px;right: 0px;">注销账户</a>
+                                </div>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+
+
+            </div>
+
+            <div class="navbar-zdy collapse navbar-collapse navbar-ex1-collapse" id="navbar-zdy" style="background-color: white;padding-bottom: 20px">
+                <form action="" method="POST" role="form">
+                    <div class="form-group" style="position: relative">
+                        <label for=""></label>
+                        <input type="text" class="form-control" name="" id="" placeholder="搜索博客">
+                        <span class="glyphicon glyphicon-arrow-right" style="position: absolute;top: 29px;right: 9px;color: #999"></span>
+                    </div>
+
+                    <a href="/blog/user" class="btn btn-primary btn-lg btn-block">个人中心</a>
+                    <a href="" class="btn btn-primary btn-lg btn-block">发表博客</a>
+                    <!--<button type="submit" class="btn btn-primary">Submit</button>-->
+                </form>
+            </div>
+        </nav>
+    </header>
+</div>
+
+<!--模态框-->
+<div class="modal fade" id="modal_tx">
+    <div class="modal-dialog">
+        <form action="/blog/detail" enctype ="multipart/form-data" method="POST">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">上传头像</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="file" name="pic">
+                    <input type="text" style="display: none" name="sRole" value="4">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" >Submit</button>
+                </div>
+            </div>
+        </form><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<div class="container">
+    <div class="editBody">
+        <ul class="nav nav-tabs" id="myTab">
+            <li class="active"><a href="#home">发表文章</a></li>
+            <li><a href="#profile">文章管理</a></li>
+            <li><a href="#messages">类别管理</a></li>
+            <li><a href="#settings">博客配置</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="home">
+                <h2>文章标题</h2>
+                <hr>
+                <div class="col-md-2 col-sm-2 col-xs-4">
+                    <select name="name" id="blog_cat" class="form-control">
+                        <%
+                          for(var i=0;i<cats.length;i++){
+                        %>
+                        <option value=<%=cats[i]%>><%=cats[i]%></option>
+                        <%
+                        }
+                        %>
+                    </select>
+                </div>
+                <span class="col-md-8 col-sm-6 col-xs-4">
+                    <input type="text" name="name" class="form-control " value="" title="" required="required" id="blog_title">
+                </span>
+                <div class="clearfix"></div>
+                <h2>文章内容</h2>
+                <hr>
+                <textarea name="con_text" style="width:500px;min-height:420px;display:none"></textarea>
+                <script id="editor" type="text/plain" style="width:1024px;height:500px;"></script>
+                <script>var ue = UE.getEditor('editor');</script>
+
+                <button type="button" class="btn btn-primary" style="margin: 20px 0" id="context">发表</button>
+            </div>
+            <div class="tab-pane" id="profile">
+
+                <hr>
+                <table class="table table-hover table-striped">
+                	<thead>
+                		<tr>
+                			<th>标题</th>
+                            <th>分类</th>
+                            <th>点击量</th>
+                            <th>评论</th>
+                            <th>评论权限</th>
+                            <th>操作</th>
+                		</tr>
+                	</thead>
+                	<tbody>
+                    
+                       <%
+                           for(var i=0;i<content.length;i++){
+                        %>
+                           <tr>
+                               <td><%= content[i]['title']%></td>
+                               <td><%= content[i]['cat']%></td>
+                               <td>
+                                   <%
+                                      if(content[i]['click']==null){
+                                        %>
+                                          0
+                                        <%
+                                      }else{
+                                       %>
+                                         <%=content[i]['click'] %>
+                                       <%
+                                   }
+                                   %>
+                               </td>
+                               <td>0</td>
+                               <td><a href="">禁止评论</a></td>
+                               <td><a href="">编辑</a>|<a href="">删除</a>|<a href="">分类</a></td>
+                           </tr>
+                        <%
+                           }
+
+                        %>
+                	</tbody>
+                </table>
+            </div>
+            <div class="tab-pane" id="messages">类别管理</div>
+            <div class="tab-pane" id="settings">博客配置</div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/javascripts/blog.js"></script>
+
+<script>
+    $(function () {
+        $('#myTab a:first').tab('show');//初始化显示哪个tab
+
+        $('#myTab a').click(function (e) {
+            e.preventDefault();//阻止a链接的跳转行为
+            $(this).tab('show');//显示当前选中的链接及关联的content
+        });
+
+       //富文本编辑器操作
+        $('#context').click(function(){
+            $.ajax({
+                type: 'post',
+                url: '/blogEdits',
+                data:{cat:$("#blog_cat").val(),title:$("#blog_title").val(),con_text:getContent(),data:new Date().toLocaleString().replace(/:\d{1,2}$/,' ')},  //利用getContent()获取到的内容，传给name="con_text",提交到数据库里
+                success:function (msg) {
+                    if(msg.msg==1){
+                        window.location.href="/blog/detail";
+                    }
+                }
+            });
+            return false;
+//            alert(new Date().toLocaleString().replace(/:\d{1,2}$/,' '))
+        });
+
+        function isFocus(e){
+            alert(UE.getEditor('editor').isFocus());
+            UE.dom.domUtils.preventDefault(e)
+        }
+        function setblur(e){
+            UE.getEditor('editor').blur();
+            UE.dom.domUtils.preventDefault(e)
+        }
+        function insertHtml() {
+            var value = prompt('插入html代码', '');
+            UE.getEditor('editor').execCommand('insertHtml', value)
+        }
+        function createEditor() {
+            enableBtn();
+            UE.getEditor('editor');
+        }
+        function getAllHtml() {
+            alert(UE.getEditor('editor').getAllHtml())
+        }
+        function getContent() { //其中这个能获取内容包括HTML标签
+            var arr = [];
+            // arr.push("使用editor.getContent()方法可以获得编辑器的内容");
+            // arr.push("内容为：");
+            arr.push(UE.getEditor('editor').getContent());
+            // alert(arr.join("\n"));
+            return arr;
+        }
+        function getPlainTxt() {
+            var arr = [];
+            arr.push("使用editor.getPlainTxt()方法可以获得编辑器的带格式的纯文本内容");
+            arr.push("内容为：");
+            arr.push(UE.getEditor('editor').getPlainTxt());
+            alert(arr.join('\n'))
+        }
+        function setContent(isAppendTo) {
+            var arr = [];
+            arr.push("使用editor.setContent('欢迎使用ueditor')方法可以设置编辑器的内容");
+            UE.getEditor('editor').setContent('欢迎使用ueditor', isAppendTo);
+            alert(arr.join("\n"));
+        }
+        function setDisabled() {
+            UE.getEditor('editor').setDisabled('fullscreen');
+            disableBtn("enable");
+        }
+
+        function setEnabled() {
+            UE.getEditor('editor').setEnabled();
+            enableBtn();
+        }
+
+        function getText() {
+            //当你点击按钮时编辑区域已经失去了焦点，如果直接用getText将不会得到内容，所以要在选回来，然后取得内容
+            var range = UE.getEditor('editor').selection.getRange();
+            range.select();
+            var txt = UE.getEditor('editor').selection.getText();
+            alert(txt)
+        }
+
+        function getContentTxt() {
+            var arr = [];
+            // arr.push("使用editor.getContentTxt()方法可以获得编辑器的纯文本内容");
+            // arr.push("编辑器的纯文本内容为：");
+            arr.push(UE.getEditor('editor').getContentTxt());
+            return arr;
+        }
+        function hasContent() {
+            var arr = [];
+            arr.push("使用editor.hasContents()方法判断编辑器里是否有内容");
+            arr.push("判断结果为：");
+            arr.push(UE.getEditor('editor').hasContents());
+            alert(arr.join("\n"));
+        }
+        function setFocus() {
+            UE.getEditor('editor').focus();
+        }
+        function deleteEditor() {
+            disableBtn();
+            UE.getEditor('editor').destroy();
+        }
+        function disableBtn(str) {
+            var div = document.getElementById('btns');
+            var btns = UE.dom.domUtils.getElementsByTagName(div, "button");
+            for (var i = 0, btn; btn = btns[i++];) {
+                if (btn.id == str) {
+                    UE.dom.domUtils.removeAttributes(btn, ["disabled"]);
+                } else {
+                    btn.setAttribute("disabled", "true");
+                }
+            }
+        }
+        function enableBtn() {
+            var div = document.getElementById('btns');
+            var btns = UE.dom.domUtils.getElementsByTagName(div, "button");
+            for (var i = 0, btn; btn = btns[i++];) {
+                UE.dom.domUtils.removeAttributes(btn, ["disabled"]);
+            }
+        }
+
+        function getLocalData () {
+            alert(UE.getEditor('editor').execCommand( "getlocaldata" ));
+        }
+
+        function clearLocalData () {
+            UE.getEditor('editor').execCommand( "clearlocaldata" );
+            alert("已清空草稿箱")
+        }
+    })
+</script>
+
+
+
+
+
+<%} else{ %>
+<h1>请返回<a href="/blog/user/login">登录</a></h1>
+<%}%>
+
+</body>
+</html>
