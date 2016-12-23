@@ -35,7 +35,7 @@ exports.blog_edit=function (req,res) {
         }
         
     }, function(err, results){
-         console.log(results['getContent'])
+         // console.log(results['getContent'])
             res.render('blogEdits', {
                 title:"博客编辑页",
                 username:req.session.username,
@@ -55,10 +55,15 @@ exports.blog_updateBlog=function (req,res) {
     if(req.body.role==1){   //销毁session
         req.session.username=null;
         res.json({msg:1});
-    }else {
+    }else if(req.body.role==2){  //上传博客内容
         var entity = new content.Content({"name": req.session.username,"title":req.body.title,"content":req.body.con_text,"time":req.body.data,"cat":req.body.cat,click:""});
         entity.save();
         res.json({msg:1});
+    }else if(req.body.role==3){  //删除博客
+        var query={"name": req.session.username,"title":req.body.title,"cat":req.body.cat};
+        content.Content.remove(query,function (err,docs) {
+            res.json({msg:1});
+        });
     }
 
 
