@@ -74,6 +74,70 @@ $(function () {
             }
         });
     });
-    
+
+    //类别管理(编辑和删除)
+    $(".catEdit").click(function () {
+        var catName=$(this).parent().siblings(".cat").html();
+        var input=$("<input type='text' value='"+catName+"'><button class='update_cat'>确认</button><button class='cancel'>取消</button>");
+        $(this).parent().siblings(".cat").html(input);
+        $(this).parent().siblings(".cat").find(".cancel").click(function () {
+            $(this).parent().html(catName);
+        });
+
+        //类别管理编辑事件
+        $(this).parent().siblings(".cat").find(".update_cat").click(function () {  //更新博客分类 通过ajax发送请求修改
+
+            if($(this).siblings("input").val()==""){
+                alert("不能为空");
+            }else{
+                $.ajax({
+                    data:{role:"4",catNameNew:$(this).siblings("input").val(),catNameOld:catName},
+                    url:"/blogEdits",
+                    type:"POST",
+                    dataType:'json',
+                    success:function (msg) {
+                        if(msg.msg==1){
+                            $(this).parent().html($(this).siblings("input").val());
+                            location.reload();
+                        }
+                    },
+                    error:function (err) {
+                        console.log(err)
+                    }
+                });
+            }
+        });
+
+        //类别管理删除事件 (觉得没有那必要  所以不支持)
+        // $(this).parent().siblings(".cat").find(".catDel").click(function () {
+        //
+        // })
+
+    });
+
+    //类别管理(上传新的分类)
+    $('.addCats').click(function () {
+        if($("#catsNew").val()==""){
+            return false;
+        }else {
+           $.ajax({
+               data:{role:"5",catsAdd:$("#catsNew").val()},
+               url:"/blogEdits",
+               type:"POST",
+               dataType:'json',
+               success:function (msg) {
+                   if(msg.msg==0){   //数据库已经存在该分类
+                       $('.fff').show();
+                   }else if(msg.msg==1){
+                       
+                       location.reload();
+                   }
+               },
+               error:function (err) {
+                   console.log(err)
+               }
+           });
+        }
+    });
     
 });

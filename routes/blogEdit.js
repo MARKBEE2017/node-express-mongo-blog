@@ -10,7 +10,7 @@ var async=require('async');
 
 exports.blog_edit=function (req,res) {
     //查找文章类别
-    async.parallel({
+    async.parallel({   //parallel函数是并行执行多个函数，每个函数都是立即执行，不需要等待其它函数先执行
         getCat: function (callback) {
             var blog_cats = [];
             cat.Cat.find(function (err, docs) {
@@ -18,7 +18,8 @@ exports.blog_edit=function (req,res) {
                     res.render('error');
                 } else {
                     for (var i = 0; i < docs.length; i++) {
-                        blog_cats.push(docs[i].catname)
+                        blog_cats.push(docs[i].catname);
+
                     }
                     callback(null, blog_cats)
                 }
@@ -32,10 +33,34 @@ exports.blog_edit=function (req,res) {
                     callback(null, docs)
                 }
             });
+        },
+        getCatsNum:function (callback) {
+            cat.Cat.find(function (err, docs) {
+                if (err) {
+                    res.render('error');
+                } else {
+                    var catsNum={},result2=[];
+                    // console.log(docs);
+                    async.mapSeries(docs,function (dd,callback1) {
+                        // console.log("dd is"+dd)
+                        // console.log("catname is"+dd['catname']);
+                        content.Content.find({name:req.session.username,cat:dd['catname']},function (err, rs) {
+                            catsNum[dd['catname']]=rs.length;
+                            // console.log(catsNum)
+                            callback1(null,catsNum);
+                        });
+                    },function (err, results) {
+                        result2=results;
+                        // console.log(result2)
+                        callback(null, result2)
+                    });
+                    
+                }
+            });
+            
         }
-        
     }, function(err, results){
-         // console.log(results['getContent'])
+         // console.log(results['getCatsNum']+"000000000")
             res.render('blogEdits', {
                 title:"博客编辑页",
                 username:req.session.username,
@@ -43,13 +68,14 @@ exports.blog_edit=function (req,res) {
                 imgUrl:req.session.imgURl,
                 date:new Date(),
                 cats:results['getCat'],
-                content:results['getContent']
+                content:results['getContent'],
+                catsNum:results['getCatsNum']
             });
         });
    
 };
 
-//将文本编辑器里的内容传给后台的数据库中
+//将文本编辑器里的内容传给后台的数据库中  及其更新博客内容
 exports.blog_updateBlog=function (req,res) {
     //上传内容
     if(req.body.role==1){   //销毁session
@@ -64,8 +90,35 @@ exports.blog_updateBlog=function (req,res) {
         content.Content.remove(query,function (err,docs) {
             res.json({msg:1});
         });
+    }else if(req.body.role==4){  //更新分类
+        var query1={"catname":req.body.catNameOld};
+        
+         // console.log(req.body.catNameOld+","+req.body.catNameNew)
+        cat.Cat.update(query1,{$set:{catname:req.body.catNameNew}},function ( err,docs) {
+           if(err){
+               res.render('error');
+           }
+        });
+        var query2={"name": req.session.username,"cat":req.body.catNameOld};
+        content.Content.update(query2,{$set:{cat:req.body.catNameNew}},function ( err,docs) {
+            if(err){
+                res.render('error');
+            }
+        });
+        res.json({msg:1});
+    }else if(req.body.role==5){  //上传分类
+        var query={"catname":req.body.catsAdd};
+
+
+        cat.Cat.find(query,function (err, docs) { //查找是否分类已经存在过
+            if(docs.length!=0){
+                res.json({msg:0});
+            }else {
+                var entity = new cat.Cat(query);
+                entity.save();
+                res.json({msg:1});
+            }
+        });
     }
 
-
-    
 };
