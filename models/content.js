@@ -10,6 +10,7 @@ var Schema = mongoose.Schema;
 var _Content = new Schema({
     name: String,
     title:String,
+    titlePic:String,
     content:String,
     time:String,
     cat:String,

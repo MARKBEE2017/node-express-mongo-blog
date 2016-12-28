@@ -2,8 +2,11 @@ var express = require('express');
 var router = express.Router();
 var mongoose=require("../models/db");
 var user=require("../models/user");
+var cat=require("../models/cats");
 var rs=require("rs");
 var formidable = require("formidable");
+var async=require('async');
+var content=require("../models/content");
 // router.get('/blog', function(req, res, next) {
 //     res.render('blog', { title: '博客首页', name: '博客更新'});
 // });
@@ -31,17 +34,35 @@ var detail=function (req,res) {
       var query1 = {name: req.body.user, password: req.body.password};
       var entity = new user.User({"name": query1.name, "password": req.body.password, "pic": ""});
       entity.save();
+      var entity2=new cat.Cat({"name":query1.name,"catname":"默认分类"});
+      entity2.save();
       req.session.username=query1.name;
       req.session.password=query1.password;
       req.session.imgURl="/images/touxiang/Koala.jpg";
-      res.render('detail', {
-          title:"博客详细页",
-          username: query1.name,
-          userSession:req.session.username,
-          imgUrl:"/images/touxiang/Koala.jpg",
-          date: new Date()
-      });
 
+
+      async.parallel({   //parallel函数是并行执行多个函数，每个函数都是立即执行，不需要等待其它函数先执行
+          getContent: function (callback) {
+              content.Content.find({name:req.session.username},function (err, docs) {
+                  if (err) {
+                      res.render('error');
+                  } else {
+                      callback(null, docs)
+                  }
+              });
+          }
+      }, function(err, results){
+          console.log(results['getContent'])
+          res.render('detail', {
+              title:"博客详细页",
+              username: query1.name,
+              userSession:req.session.username,
+              imgUrl:"/images/touxiang/Koala.jpg",
+              contents:results['getContent'],
+              date: new Date()
+          });
+      });
+      
   }else if(req.body.sRole==2){    //处理ajax（用户名是否注册过）
       var query2 = {name: req.body.name};
       user.User.find(query2,function (err, docs) {
@@ -59,32 +80,50 @@ var detail=function (req,res) {
   else if(req.body.sRole==3){   //处理登录
       var imgur2="";
       var query3={name:req.body.user,password:req.body.password};
-      user.User.find(query3,function (err, docs) {
-          if(err){
-              res.render('error');
-          }else {
-              if(docs.length==0){
-                  res.redirect("/loginError");
-              }else {
-                  if(docs[0]['pic']==""){
-                      imgur2="/images/touxiang/Koala.jpg"
-                  }else{
-                      imgur2=urlHandle(docs[0]['pic'])
+      async.parallel({   //parallel函数是并行执行多个函数，每个函数都是立即执行，不需要等待其它函数先执行
+          getContent: function (callback) {
+              content.Content.find({name:query3.name},function (err, docs) {
+                  if (err) {
+                      res.render('error');
+                  } else {
+                      callback(null, docs)
                   }
-                  req.session.username=query3.name;
-                  req.session.password=query3.password;
-                  req.session.imgURl=imgur2;
-                  res.render('detail',{
-                      title:"博客详细页",
-                      status:docs,
-                      username:query3.name,
-                      userSession:req.session.username,
-                      imgUrl:imgur2,
-                      date:new Date()
-                  });
-              }
+              });
+          },
+          getImgUrl:function (callback) {
+              user.User.find(query3,function (err, docs) {
+                  if(err){
+                      res.render('error');
+                  }else {
+                      if(docs.length==0){
+                          res.redirect("/loginError");
+                      }else {
+                          if(docs[0]['pic']==""){
+                              imgur2="/images/touxiang/Koala.jpg"
+                          }else{
+                              imgur2=urlHandle(docs[0]['pic'])
+                          }
+                          req.session.username=query3.name;
+                          req.session.password=query3.password;
+                          req.session.imgURl=imgur2;
+                       callback(null,imgur2);
+                      }
+                  }
+              });
           }
+      }, function(err, results){
+          // console.log(results['getContent'])
+          res.render('detail',{
+              title:"博客详细页",
+              username:query3.name,
+              userSession:req.session.username,
+              imgUrl:results['getImgUrl'],
+              contents:results['getContent'],
+              date:new Date()
+          });
       });
+      
+      
   }
   else if(req.body.sRole==4){ 
       var imgurl3="";
@@ -114,31 +153,52 @@ var detail=function (req,res) {
   else{
       var imgurl4="";
       var query5={name:req.session.username};
-      user.User.find(query5,function (err, docs) {
-          if(err){
-              res.render('error');
-          }else {
-              if(docs.length==0){
-                  res.redirect("/loginError");
-              }else {
-                  if(docs[0]['pic']==""){
-                      imgurl4="/images/touxiang/Koala.jpg"
-                  }else{
-                      imgurl4=urlHandle(docs[0]['pic'])
+
+
+
+
+      async.parallel({   //parallel函数是并行执行多个函数，每个函数都是立即执行，不需要等待其它函数先执行
+          getContent: function (callback) {
+              content.Content.find({name:query5.name},function (err, docs) {
+                  if (err) {
+                      res.render('error');
+                  } else {
+                      callback(null, docs)
                   }
-                  req.session.username=query5.name;
-                  req.session.password=query5.password;
-                  res.render('detail',{
-                      title:"博客详细页",
-                      status:docs,
-                      username:query5.name,
-                      userSession:req.session.username,
-                      imgUrl:imgurl4,
-                      date:new Date()
-                  });
-              }
+              });
+          },
+          getImgUrl:function (callback) {
+              user.User.find(query5,function (err, docs) {
+                  if(err){
+                      res.render('error');
+                  }else {
+                      if(docs.length==0){
+                          res.redirect("/loginError");
+                      }else {
+                          if(docs[0]['pic']==""){
+                              imgurl4="/images/touxiang/Koala.jpg"
+                          }else{
+                              imgurl4=urlHandle(docs[0]['pic'])
+                          }
+                          req.session.username=query5.name;
+                          req.session.password=query5.password;
+                          callback(null,imgurl4);
+                      }
+                  }
+              });
           }
+      }, function(err, results){
+          // console.log(results['getContent'])
+          res.render('detail',{
+              title:"博客详细页",
+              username:query5.name,
+              userSession:req.session.username,
+              imgUrl:results['getImgUrl'],
+              contents:results['getContent'],
+              date:new Date()
+          });
       });
+      
   }
 };
 

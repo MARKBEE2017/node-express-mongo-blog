@@ -13,7 +13,7 @@ exports.blog_edit=function (req,res) {
     async.parallel({   //parallel函数是并行执行多个函数，每个函数都是立即执行，不需要等待其它函数先执行
         getCat: function (callback) {
             var blog_cats = [];
-            cat.Cat.find(function (err, docs) {
+            cat.Cat.find({"name":req.session.username},function (err, docs) {
                 if (err) {
                     res.render('error');
                 } else {
@@ -78,20 +78,38 @@ exports.blog_edit=function (req,res) {
 //将文本编辑器里的内容传给后台的数据库中  及其更新博客内容
 exports.blog_updateBlog=function (req,res) {
     //上传内容
+
     if(req.body.role==1){   //销毁session
         req.session.username=null;
         res.json({msg:1});
     }else if(req.body.role==2){  //上传博客内容
-        var entity = new content.Content({"name": req.session.username,"title":req.body.title,"content":req.body.con_text,"time":req.body.data,"cat":req.body.cat,click:""});
+        var titlePic="";
+        
+        
+        var con=req.body.con_text;
+        //匹配图片（g表示匹配所有结果i表示区分大小写）
+        var imgReg = /<img.*?(?:>|\/>)/gi;
+        //匹配src属性
+        var srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
+        var arr = con[0].match(imgReg);
+        if(arr==null){
+            titlePic="/images/ex02.jpg"
+        }else {
+            titlePic=arr[0].match(srcReg)[1];
+        }
+
+        
+        var entity = new content.Content({"name": req.session.username,"title":req.body.title,"titlePic":titlePic,"content":req.body.con_text,"time":req.body.data,"cat":req.body.cat,click:""});
         entity.save();
         res.json({msg:1});
+        // console.log(req.body.con_text)
     }else if(req.body.role==3){  //删除博客
         var query={"name": req.session.username,"title":req.body.title,"cat":req.body.cat};
         content.Content.remove(query,function (err,docs) {
             res.json({msg:1});
         });
     }else if(req.body.role==4){  //更新分类
-        var query1={"catname":req.body.catNameOld};
+        var query1={"name":req.session.username,"catname":req.body.catNameOld};
         
          // console.log(req.body.catNameOld+","+req.body.catNameNew)
         cat.Cat.update(query1,{$set:{catname:req.body.catNameNew}},function ( err,docs) {
@@ -107,7 +125,7 @@ exports.blog_updateBlog=function (req,res) {
         });
         res.json({msg:1});
     }else if(req.body.role==5){  //上传分类
-        var query={"catname":req.body.catsAdd};
+        var query={"name":req.session.username,"catname":req.body.catsAdd};
 
 
         cat.Cat.find(query,function (err, docs) { //查找是否分类已经存在过

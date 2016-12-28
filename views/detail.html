@@ -132,85 +132,32 @@
                     <h2 class="title_ct">
                         <p style="background: white;width: 145px">文章<span style="color: #ff8986;">推荐</span></p>
                     </h2>
+                    <%　for(var i=0;i<contents.length;i++){
+                    %>
+
                     <div class="list_ct">
-                        <h3>这是博客的列表标题1</h3>
+                        <h3><%=contents[i]['title']%></h3>
                         <hr>
                         <div class="">
-                            <div class="col-md-3 blog_item_img"><img src="/images/ex02.jpg" alt="" class="img-responsive"></div>
+                            <div class="col-md-3 blog_item_img"><img src=<%=contents[i]['titlePic']%> alt="" class="img-responsive"></div>
                             <div class="col-md-9 blog_item_con">
-                                <p>博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容...</p>
+                                <p><%=contents[i]['content']%></p>
                             </div>
                         </div>
                         <!-- Usage as a class -->
                         <div class="clearfix"></div>
-                    </div>
-                    <div class="dateView">
-                        <a href="" class="readAll" style="float: right">阅读全文>></a>
-                        <small><span class="glyphicon glyphicon-time"></span>2016-12-13</small>
-                        <small>作者:徐伟康</small>
-                        <small>个人博客：[<a href="">程序人生</a>]</small>
+                        <div class="dateView">
+                            <a href="" class="readAll" style="float: right">阅读全文>></a>
+                            <small><span class="glyphicon glyphicon-time"></span><%=contents[i]['time']%></small>
+                            <small>作者:<%=contents[i]['name']%></small>
+                            <small>个人博客：[<a href=""><%=contents[i]['cat']%></a>]</small>
 
-                    </div>
-
-                    <div class="list_ct">
-                        <h3>这是博客的列表标题1</h3>
-                        <hr>
-                        <div class="">
-                            <div class="col-md-3 blog_item_img"><img src="/images/ex02.jpg" alt="" class="img-responsive"></div>
-                            <div class="col-md-9 blog_item_con">
-                                <p>博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容...</p>
-                            </div>
                         </div>
-                        <!-- Usage as a class -->
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="dateView">
-                        <a href="" class="readAll" style="float: right">阅读全文>></a>
-                        <small><span class="glyphicon glyphicon-time"></span>2016-12-13</small>
-                        <small>作者:徐伟康</small>
-                        <small>个人博客：[<a href="">程序人生</a>]</small>
-
                     </div>
 
-                    <div class="list_ct">
-                        <h3>这是博客的列表标题1</h3>
-                        <hr>
-                        <div class="">
-                            <div class="col-md-3 blog_item_img"><img src="/images/ex02.jpg" alt="" class="img-responsive"></div>
-                            <div class="col-md-9 blog_item_con">
-                                <p>博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容...</p>
-                            </div>
-                        </div>
-                        <!-- Usage as a class -->
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="dateView">
-                        <a href="" class="readAll" style="float: right">阅读全文>></a>
-                        <small><span class="glyphicon glyphicon-time"></span>2016-12-13</small>
-                        <small>作者:徐伟康</small>
-                        <small>个人博客：[<a href="">程序人生</a>]</small>
+                    <%
+                    }　%>
 
-                    </div>
-
-                    <div class="list_ct">
-                        <h3>这是博客的列表标题1</h3>
-                        <hr>
-                        <div class="">
-                            <div class="col-md-3 blog_item_img"><img src="/images/ex02.jpg" alt="" class="img-responsive"></div>
-                            <div class="col-md-9 blog_item_con">
-                                <p>博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容博客内容...</p>
-                            </div>
-                        </div>
-                        <!-- Usage as a class -->
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="dateView">
-                        <a href="" class="readAll" style="float: right">阅读全文>></a>
-                        <small><span class="glyphicon glyphicon-time"></span>2016-12-13</small>
-                        <small>作者:徐伟康</small>
-                        <small>个人博客：[<a href="">程序人生</a>]</small>
-
-                    </div>
                 </article>
             </div>
             <div class="c_right col-md-3 col-sm-4 hidden-xs">

@@ -13,8 +13,7 @@ $(function () {
     $("[data-toggle='popover']").popover();
 
 
-
-
+    
     //富文本编辑器操作
     $('#context').click(function(){
         $.ajax({
