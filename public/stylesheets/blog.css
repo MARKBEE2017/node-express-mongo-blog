@@ -139,6 +139,10 @@
 }
 
 
+.ArticleContent .left{border: 1px solid #999999}
+.ArticleContent img{width: 142px;margin-left: 23px}
+
+
 @media screen and (min-width:768px){
   #navbar-zdy{
       display: none!important;

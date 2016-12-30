@@ -139,5 +139,25 @@ $(function () {
            });
         }
     });
+
+
+
+
+
+    //博客查看全文
+
+    $(".readAll").click(function () {
+        $.ajax({
+            url: '/blog/detail/Article',
+            type: 'GET',
+            data: {name:$(this).siblings().find(".name").html(), title:$(this).parent().siblings("h3").html()},
+            success: function (msg) {
+               window.location.href="/blog/detail/Article?name="
+            },
+            error: function (err) {
+                console.log("err")
+            }
+        });
+    });
     
 });

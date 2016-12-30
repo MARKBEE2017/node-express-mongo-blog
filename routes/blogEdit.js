@@ -75,7 +75,7 @@ exports.blog_edit=function (req,res) {
    
 };
 
-//将文本编辑器里的内容传给后台的数据库中  及其更新博客内容
+//将文本编辑器里的内容传给后台的数据库中  及其更新博 客内容
 exports.blog_updateBlog=function (req,res) {
     //上传内容
 
@@ -85,7 +85,7 @@ exports.blog_updateBlog=function (req,res) {
     }else if(req.body.role==2){  //上传博客内容
         var titlePic="";
         
-        
+
         var con=req.body.con_text;
         //匹配图片（g表示匹配所有结果i表示区分大小写）
         var imgReg = /<img.*?(?:>|\/>)/gi;
@@ -99,7 +99,7 @@ exports.blog_updateBlog=function (req,res) {
         }
 
         
-        var entity = new content.Content({"name": req.session.username,"title":req.body.title,"titlePic":titlePic,"content":req.body.con_text,"time":req.body.data,"cat":req.body.cat,click:""});
+        var entity = new content.Content({"name": req.session.username,"title":req.body.title,"titlePic":titlePic,"text":req.body.text,"content":req.body.con_text,"time":req.body.data,"cat":req.body.cat,click:""});
         entity.save();
         res.json({msg:1});
         // console.log(req.body.con_text)

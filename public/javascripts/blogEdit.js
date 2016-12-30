@@ -19,7 +19,7 @@ $(function () {
         $.ajax({
             type: 'post',
             url: '/blogEdits',
-            data:{role:"2",cat:$("#blog_cat").val(),title:$("#blog_title").val(),con_text:getContent(),data:new Date().toLocaleString().replace(/:\d{1,2}$/,' ')},  //利用getContent()获取到的内容，传给name="con_text",提交到数据库里
+            data:{role:"2",cat:$("#blog_cat").val(),title:$("#blog_title").val(),con_text:getContent(),text:getContentTxt(),data:new Date().toLocaleString().replace(/:\d{1,2}$/,' ')},  //利用getContent()获取到的内容，传给name="con_text",提交到数据库里
             success:function (msg) {
                 if(msg.msg==1){
                     window.location.href="/blog/detail";

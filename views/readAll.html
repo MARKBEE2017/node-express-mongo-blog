@@ -1,4 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head><!doctype html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -8,7 +13,7 @@
     <link rel="stylesheet" href="/stylesheets/blog.css">
 </head>
 <body>
-<% if(userSession){%>
+
 <div class="container-fluid " style="background-color: #48525e">
     <header>
         <nav class="navbar" role="navigation" style="margin-bottom: -20px;height: 50px;z-index: 1000">
@@ -56,22 +61,34 @@
                                 </p>
                             </div>
                         </form>
-                    </button>
-                    <a href="/blogEdits" class="btn btn-default btn-lg btn-menu-icon"><span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                        <a href="/blogEdits" class="btn btn-default btn-lg btn-menu-icon"><span class="glyphicon glyphicon-pencil"></span>
 
-                    </a>
+                        </a>
+                    <% if(userSession){%>
                     <button type="button" class="btnnod btn-default btn-lg btn-menu-icon"><img src=<%=imgUrl%> alt="" width="25" height="25" >
                         <div class="user_edit btn-menu-hide wrak">
-                            <div class="user_edit_no" style="height:146px">
-                               <div style="margin-top: 15px;position: relative">
-                                   <a style="position: absolute;top: 5px;left: 20px" data-toggle="modal" href="#modal_tx"><img src=<%=imgUrl%> alt="" width="100" height="100"></a>
+                                <div class="user_edit_no" style="height:146px">
+                                    <div style="margin-top: 15px;position: relative">
+                                        <a style="position: absolute;top: 5px;left: 20px" data-toggle="modal" href="#modal_tx"><img src=<%=imgUrl%> alt="" width="100" height="100"></a>
 
-                                   <a href="/blog/user" style="position: absolute;top: 5px;right: 20px;"><%=userSession %></a>
-                                   <a class="destroySession" style="position: absolute;top: 55px;right: 0px;">注销账户</a>
-                               </div>
+                                        <a href="/blog/user" style="position: absolute;top: 5px;right: 20px;"><%=userSession %></a>
+                                        <a class="destroySession" style="position: absolute;top: 55px;right: 0px;">注销账户</a>
+                                    </div>
+                                </div>
+                        </div>
+                    </button>
+                    <% }else{%>
+                    <button type="button" class="btnnod btn-default btn-lg btn-menu-icon"><span class="glyphicon glyphicon-user"></span>
+                        <div class="user_edit btn-menu-hide wrak">
+                            <div class="user_edit_no">
+                                <a href="/blog/user/login">登录</a>
+                                <a href="/blog/user/reg">注册</a>
                             </div>
                         </div>
                     </button>
+                    <%}%>
+
                 </div>
 
 
@@ -124,81 +141,21 @@
         <h3>hello world</h3>
     </div>
 </div>
-<div class="container-fluid" style="width: 94%">
-    <div class="content">
-        <div class="">
-            <div class="c_left col-md-9 col-sm-8 col-xs-12" style="height: 400px">
-                <article >
-                    <h2 class="title_ct">
-                        <p style="background: white;width: 145px">文章<span style="color: #ff8986;">推荐</span></p>
-                    </h2>
-                    <%　for(var i=contents.length-1;i>=0;i--){
-                    %>
 
-                    <div class="list_ct">
-                        <h3><%=contents[i]['title']%></h3>
-                        <hr>
-                        <div class="">
-                            <div class="col-md-3 blog_item_img"><img src=<%=contents[i]['titlePic']%> alt="" class="img-responsive"></div>
-                            <div class="col-md-9 blog_item_con">
-                                <p><%=contents[i]['text']%></p>
-                            </div>
-                        </div>
-                        <!-- Usage as a class -->
-                        <div class="clearfix"></div>
-                        <div class="dateView">
-                            <a href="javascript:void(0)" class="readAll" style="float: right">阅读全文>></a>
-                            <small><span class="glyphicon glyphicon-time"></span><%=contents[i]['time']%></small>
-                            <small>作者:<span class="name"><%=contents[i]['name']%></span></small>
-                            <small>个人博客：[<a href=""><%=contents[i]['cat']%></a>]</small>
-                        </div>
-                    </div>
 
-                    <%
-                    }　%>
 
-                </article>
-            </div>
-            <div class="c_right col-md-3 col-sm-4 hidden-xs">
-                <aside >
-                    <div class="newestArticle">
-                        <h4 class="title_nt">
-                            <p style="background: white;width: 145px">最新<span style="color: #37ccca;">文章</span></p>
-                        </h4>
-                        <ul class="item_nt">
-                            <% for(var i=contents.length-1;i>=0;i--){
-                            %>
-                            <li><%=contents[i]['title']%></li>
-                            <%
-                            }
-                            %>
-                        </ul>
-                    </div>
-                    <div class="clickRand">
-                        <h4 class="title_nt">
-                            <p style="background: white;width: 145px">点击<span style="color: red;">排行</span></p>
-                        </h4>
-                        <ul class="item_nt" style="padding: 0 23px">
-                            <li><span class="badge b_no1">1</span>点击量排行博客内容</li>
-                            <li><span class="badge">2</span>点击量排行博客内容</li>
-                            <li><span class="badge">3</span>点击量排行博客内容</li>
-                            <li><span class="badge">4</span>点击量排行博客内容</li>
-                            <li><span class="badge">5</span>点击量排行博客内容</li>
-                        </ul>
-                    </div>
-                    <div class="linkMe">
-                        <h4 class="title_nt">
-                            <p style="background: white;width: 145px">友情<span style="color: red;">链接</span></p>
-                        </h4>
-                        <a href="/">
-                            <img src="/images/ewm.jpg" alt="" width="250px">
-                        </a>
-                    </div>
-                </aside>
-            </div>
+<div class="container-fluid" style="width: 64%">
+    <div class="ArticleContent">
+        <div class="left col-md-3">
+            <h3>个人资料</h3>
+            <img src=<%=imgUrl%> alt="">
+            <h4><%=contents%></h4>
+            <hr>
         </div>
+        <div class="right col-md-8 pull-right" style="background-color: black"></div>
     </div>
 </div>
+
 
 
 <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
@@ -206,18 +163,9 @@
 <script src="/javascripts/blog.js"></script>
 
 
-
-
-
-
-
-<%} else{ %>
-<h1>请返回<a href="/blog/user/login">登录</a></h1>
-<%}%>
+</body>
+</html>
+<body>
 
 </body>
 </html>
-
-
-
-

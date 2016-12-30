@@ -11,6 +11,7 @@ var _Content = new Schema({
     name: String,
     title:String,
     titlePic:String,
+    text:String,
     content:String,
     time:String,
     cat:String,

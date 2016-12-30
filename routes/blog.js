@@ -125,38 +125,52 @@ var detail=function (req,res) {
       
       
   }
-  else if(req.body.sRole==4){ 
-      var imgurl3="";
+  else if(req.body.sRole==4) {
+      var imgurl3 = "";
       //处理头像上传
-      var query4={name:req.session.username};
+      var query4 = {name: req.session.username};
       var file = req.files.pic;
       var path = file.path;
       //存储路径
-      user.User.update(query4,{$set:{pic:path}},function ( err,docs) {
-        
+      user.User.update(query4, {$set: {pic: path}}, function (err, docs) {
+
       });
-      if(path==""){
-          imgurl3="/images/touxiang/Koala.jpg"
-      }else{
-          imgurl3=urlHandle(path)
+      if (path == "") {
+          imgurl3 = "/images/touxiang/Koala.jpg"
+      } else {
+          imgurl3 = urlHandle(path)
       }
-      req.session.imgURl=imgurl3;
-      res.render('detail',{
-          title:"博客详细页",
-          username:query4.name,
-          userSession:req.session.username,
-          imgUrl:imgurl3,
-          date:new Date()
+      req.session.imgURl = imgurl3;
+
+
+      async.parallel({   //parallel函数是并行执行多个函数，每个函数都是立即执行，不需要等待其它函数先执行
+          getContent: function (callback) {
+              content.Content.find({name: query4.name}, function (err, docs) {
+                  if (err) {
+                      res.render('error');
+                  } else {
+                      callback(null, docs)
+                  }
+              });
+          }
+      }, function (err, results) {
+          // console.log(results['getContent'])
+          res.render('detail', {
+              title: "博客详细页",
+              username: query4.name,
+              userSession: req.session.username,
+              contents: results['getContent'],
+              imgUrl: imgurl3,
+              date: new Date()
+          });
       });
+
+
   }
 
   else{
       var imgurl4="";
       var query5={name:req.session.username};
-
-
-
-
       async.parallel({   //parallel函数是并行执行多个函数，每个函数都是立即执行，不需要等待其它函数先执行
           getContent: function (callback) {
               content.Content.find({name:query5.name},function (err, docs) {
@@ -205,6 +219,52 @@ var detail=function (req,res) {
 exports.detail=detail;
 
 
+var readAll=function (req, res) {
+    var imgurl4="";
+    var query5={name:req.query.name};
+    async.parallel({   //parallel函数是并行执行多个函数，每个函数都是立即执行，不需要等待其它函数先执行
+        getContent: function (callback) {
+            content.Content.find({name:query5.name,title:req.query.title},function (err, docs) {
+                if (err) {
+                    res.render('error');
+                } else {
+                    callback(null, docs)
+                }
+            });
+        },
+        getImgUrl:function (callback) {
+            user.User.find(query5,function (err, docs) {
+                if(err){
+                    res.render('error');
+                }else {
+                    if(docs.length==0){
+                        
+                    }else {
+                        if(docs[0]['pic']==""){
+                            imgurl4="/images/touxiang/Koala.jpg"
+                        }else{
+                            imgurl4=urlHandle(docs[0]['pic'])
+                        }
+                        req.session.username=query5.name;
+                        req.session.password=query5.password;
+                       
+                    }
+                    callback(null,imgurl4);
+                }
+            });
+        }
+    }, function(err, results){
+        res.render('readAll',{
+            title:"博客内容页单页",
+            username:query5.name,
+            userSession:req.session.username,
+            imgUrl:results['getImgUrl'],
+            contents:results['getContent'],
+            date:new Date()
+        });
+    });
+};
+exports.readAll=readAll;
 
 
 function urlHandle(url) {
