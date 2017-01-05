@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head><!doctype html>
+<!doctype html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -11,9 +6,12 @@
     <title><%= title %></title>
     <link rel="stylesheet" href="/plugins/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/stylesheets/blog.css">
+    <script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.all.min.js"> </script>
+    <script type="text/javascript" charset="utf-8" src="/ueditor/lang/zh-cn/zh-cn.js"> </script>
 </head>
 <body>
-
+<% if(userSession){%>
 <div class="container-fluid " style="background-color: #48525e">
     <header>
         <nav class="navbar" role="navigation" style="margin-bottom: -20px;height: 50px;z-index: 1000">
@@ -31,7 +29,7 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class=" navbar-collapse navbar-ex1-collapse hidden-xs">
                 <div class="btn-group pull-right " style="margin-top: 1px">
-                    <a class="btn btn-default btn-lg btn-menu-icon"><span class="glyphicon glyphicon-search"></span>
+                    <button type="button" class="btn btn-default btn-lg btn-menu-icon"><span class="glyphicon glyphicon-search"></span>
                         <form action="" method="POST" role="form" class="blog_search btn-menu-hide wrak" >
                             <div class="form-group">
                                 <label for="1"></label>
@@ -39,8 +37,8 @@
                                 <span class="glyphicon glyphicon-arrow-right" style="position: absolute;top: 38px;right: 9px;color: #999"></span>
                             </div>
                         </form>
-                    </a>
-                    <a class="btn btn-default btn-lg btn-menu-icon"><span class="glyphicon glyphicon-star"></span>
+                    </button>
+                    <button type="button" class="btn btn-default btn-lg btn-menu-icon"><span class="glyphicon glyphicon-star"></span>
                         <form action="" method="POST" role="form" class="blog_collect btn-menu-hide wrak" >
                             <div class="form-group">
                                 <p>
@@ -61,34 +59,23 @@
                                 </p>
                             </div>
                         </form>
-                        </a>
-                        <a href="/blogEdits" class="btn btn-default btn-lg btn-menu-icon"><span class="glyphicon glyphicon-pencil"></span>
+                    </button>
+                    <a href="/blogEdits" class="btn btn-default btn-lg btn-menu-icon"><span class="glyphicon glyphicon-pencil"></span>
 
-                        </a>
-                    <% if(userSession){%>
+                    </a>
                     <button type="button" class="btnnod btn-default btn-lg btn-menu-icon"><img src=<%=imgUrl%> alt="" width="25" height="25" >
                         <div class="user_edit btn-menu-hide wrak">
-                                <div class="user_edit_no" style="height:146px">
-                                    <div style="margin-top: 15px;position: relative">
-                                        <a style="position: absolute;top: 5px;left: 20px" data-toggle="modal" href="#modal_tx"><img src=<%=imgUrl%> alt="" width="100" height="100"></a>
+                            <div class="user_edit_no" style="height:146px">
+                                <div style="margin-top: 15px;position: relative">
+                                    <a style="position: absolute;top: 5px;left: 20px" data-toggle="modal" href="#modal_tx"><img src=<%=imgUrl%> alt="" width="100" height="100"></a>
 
-                                        <a href="/blog/user" style="position: absolute;top: 5px;right: 20px;"><%=userSession %></a>
-                                        <a class="destroySession" style="position: absolute;top: 55px;right: 0px;">注销账户</a>
-                                    </div>
+                                    <a href="/blog/user" style="position: absolute;top: 5px;right: 20px;"><%=userSession %></a>
+
+                                    <a class="destroySession" style="position: absolute;top: 55px;right: 0px;">注销账户</a>
                                 </div>
-                        </div>
-                    </button>
-                    <% }else{%>
-                    <button type="button" class="btnnod btn-default btn-lg btn-menu-icon"><span class="glyphicon glyphicon-user"></span>
-                        <div class="user_edit btn-menu-hide wrak">
-                            <div class="user_edit_no">
-                                <a href="/blog/user/login">登录</a>
-                                <a href="/blog/user/reg">注册</a>
                             </div>
                         </div>
                     </button>
-                    <%}%>
-
                 </div>
 
 
@@ -111,6 +98,35 @@
     </header>
 </div>
 
+
+
+
+<div class="container">
+    <div class="editBody">
+        <div class="tab-content">
+            <div class="tab-pane active" id="home">
+                <h2>文章标题</h2>
+                <hr>
+                <span class="col-md-8 col-sm-6 col-xs-4">
+                    <input type="text" name="name" class="form-control " value=<%=contents[0]['title']%> title="" required="required" id="blog_title">
+                    <input type="text" style="display: none" id="blog_cat" value=<%=contents[0]['cat']%>>
+                </span>
+
+                <div class="clearfix"></div>
+                <hr>
+                <h2>文章内容</h2>
+                <hr>
+                <textarea name="con_text" style="width:500px;min-height:420px;display:none"></textarea>
+                <script id="editor" type="text/plain" style="width:1024px;height:500px;"></script>
+                <script>var ue = UE.getEditor('editor');</script>
+
+                <button type="button" class="btn btn-primary" style="margin: 20px 0" id="context_update">发表</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!--模态框-->
 <div class="modal fade" id="modal_tx">
     <div class="modal-dialog">
@@ -130,74 +146,39 @@
                     <button type="submit" class="btn btn-primary" >Submit</button>
                 </div>
             </div>
-        </form><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-
-<div class="banner img-responsive">
-    <div class="blog_title">
-        <h2><a href="/blog/user" style="color: black;font-weight: bolder"><%=username%></a></h2>
-        <h3>hello world</h3>
+        </form>
     </div>
 </div>
-
-
-
-<div class="container-fluid" style="width: 64%">
-    <div class="ArticleContent">
-        <div class="left col-md-3">
-            <h3>个人资料</h3>
-            <img src=<%=imgUrl2%> alt="">
-            <h4 style="text-align: center"><%=contents[0]['name']%></h4>
-            <hr>
-            <h4>访问:&nbsp;&nbsp;&nbsp;&nbsp;<%=contents[0]['click']%>次</h4>
-            <hr>
-            <%  for(var i=0;i<cats.length;i++){
-            %>
-            <h4><%=cats[i]['catname']%>:<span class="catNum"><%=catsNum[0][cats[i]['catname']]%>篇</span></h4>
-            <%
-            }
-            %>
-
-        </div>
-        <div class="right col-md-8 pull-right">
-            <h2><span><%=contents[0]['title']%></span><small>(<span><%=contents[0]['cat']%></span>)</small></h2>
-            <div class="time_edit">
-                <span class="time"><%=contents[0]['time']%>&nbsp;&nbsp;<%=contents[0]['click']%>次访问</span>
-                <span class="edit">
-                    <a href="">评论</a>
-                    <a href="">收藏</a>
-                    <%
-                      if(userSession){
-                    %>
-                    <a href="javascript:void(0)" class="edit">编辑</a>
-                    <a href="javascript:void(0)" class="remove">删除</a>
-                    <%
-                    }
-                    %>
-                </span>
-            </div>
-            <div class="clearfix"></div>
-            <hr>
-            <div class="article">
-                <%-contents[0]['content']%>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-
 
 <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 <script src="/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="/javascripts/blog.js"></script>
+<script src="/javascripts/blogEdit.js"></script>
+<script>
+  $(function () {
+      ue.addListener("ready", function () {
+          // editor准备好之后才可以使用
+          //初始化编辑器内容
+          $.ajax({
+              type: 'POST',
+              url: '/blogEdits',
+              data:{role:"6",title:$("#blog_title").val(),cat:$("#blog_cat").val()},
+              success:function (msg) {
+                  ue.setContent(msg.msg[0]['content']);
+              }
+          });
+//        ue.setContent("sssss");
+
+      });
+  })
+</script>
 
 
-</body>
-</html>
-<body>
+
+
+<%} else{ %>
+<h1>请返回<a href="/blog/user/login">登录</a></h1>
+<%}%>
 
 </body>
 </html>

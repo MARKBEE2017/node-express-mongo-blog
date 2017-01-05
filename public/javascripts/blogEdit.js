@@ -13,8 +13,14 @@ $(function () {
     $("[data-toggle='popover']").popover();
 
 
+
+
+
     
+
+   
     //富文本编辑器操作
+    //上传博客内容
     $('#context').click(function(){
         $.ajax({
             type: 'post',
@@ -29,7 +35,22 @@ $(function () {
         return false;
 //            alert(new Date().toLocaleString().replace(/:\d{1,2}$/,' '))
     });
-
+    
+    //修改博客内容
+    $('#context_update').click(function(){
+        $.ajax({
+            type: 'post',
+            url: '/blogEdits',
+            data:{role:"7",cat:$("#blog_cat").val(),title:$("#blog_title").val(),con_text:getContent(),text:getContentTxt()}, 
+            success:function (msg) {
+                if(msg.msg==1){
+                    window.location.href="/blog/detail";
+                }
+            }
+        });
+        return false;
+//            alert(new Date().toLocaleString().replace(/:\d{1,2}$/,' '))
+    });
 
     //文章管理表格操作
     $(".removeTr").click(function () {
@@ -42,7 +63,7 @@ $(function () {
             data:{role:"3",cat:tr.find(".catTd").html(),title:tr.find(".titleTd").html()},
             success:function (msg) {
                if(msg.msg==1){
-                   
+
                }
             }
         });

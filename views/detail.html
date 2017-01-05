@@ -20,7 +20,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#" style="color: white;">微博首页</a>
+                <a class="navbar-brand" href="/blog" style="color: white;">微博首页</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -35,7 +35,7 @@
                             </div>
                         </form>
                     </a>
-                    <a class="btn btn-default btn-lg btn-menu-icon"><span class="glyphicon glyphicon-star"></span>
+                    <button class="btn btn-default btn-lg btn-menu-icon"><span class="glyphicon glyphicon-star"></span>
                         <form action="" method="POST" role="form" class="blog_collect btn-menu-hide wrak" >
                             <div class="form-group">
                                 <p>
@@ -130,7 +130,7 @@
             <div class="c_left col-md-9 col-sm-8 col-xs-12" style="height: 400px">
                 <article >
                     <h2 class="title_ct">
-                        <p style="background: white;width: 145px">文章<span style="color: #ff8986;">推荐</span></p>
+                        <p style="background: white;width: 145px">我的<span style="color: #ff8986;">文章</span></p>
                     </h2>
                     <%　for(var i=contents.length-1;i>=0;i--){
                     %>
@@ -166,9 +166,16 @@
                             <p style="background: white;width: 145px">最新<span style="color: #37ccca;">文章</span></p>
                         </h4>
                         <ul class="item_nt">
-                            <% for(var i=contents.length-1;i>=0;i--){
+                            <%
+                              var count=0;
+                            for(var i=contentsAll.length-1;i>=0;i--){
+                             count++;
+                            if(count>5){    //最新文章的显示个数为5
+                             break;
+                            }
+                             var src="/blog/detail/Article?name="+contentsAll[i]['name']+"&&title="+contentsAll[i]['title']
                             %>
-                            <li><%=contents[i]['title']%></li>
+                            <li><a class="tit" href=<%=src%>><%=contentsAll[i]['title']%></a><span class="name" style="display: none"><%=contentsAll[i]['name']%></span></li>
                             <%
                             }
                             %>
@@ -179,11 +186,22 @@
                             <p style="background: white;width: 145px">点击<span style="color: red;">排行</span></p>
                         </h4>
                         <ul class="item_nt" style="padding: 0 23px">
-                            <li><span class="badge b_no1">1</span>点击量排行博客内容</li>
-                            <li><span class="badge">2</span>点击量排行博客内容</li>
-                            <li><span class="badge">3</span>点击量排行博客内容</li>
-                            <li><span class="badge">4</span>点击量排行博客内容</li>
-                            <li><span class="badge">5</span>点击量排行博客内容</li>
+                            <!--<li><span class="badge b_no1">1</span>点击量排行博客内容</li>-->
+                            <!--<li><span class="badge">2</span>点击量排行博客内容</li>-->
+                            <!--<li><span class="badge">3</span>点击量排行博客内容</li>-->
+                            <!--<li><span class="badge">4</span>点击量排行博客内容</li>-->
+                            <!--<li><span class="badge">5</span>点击量排行博客内容</li>-->
+                            <%
+                            for(var i=0;i<contentsByClick.length;i++){
+                              var src="/blog/detail/Article?name="+contentsByClick[i]['name']+"&&title="+contentsByClick[i]['title']
+                            %>
+                            <% if(i==0) {%>
+                            <li><span class="badge b_no1">1</span><a class="tit" href=<%=src%>><%=contentsByClick[i]['title']%></a><span class="name" style="display: none"><%=contentsByClick[i]['name']%></span></li>
+                            <% continue;}%>
+                            <li><span class="badge"><%=i+1 %></span><a class="tit" href=<%=src%>><%=contentsByClick[i]['title']%></a><span class="name" style="display: none"><%=contentsByClick[i]['name']%></span></li>
+                            <%
+                            }
+                            %>
                         </ul>
                     </div>
                     <div class="linkMe">

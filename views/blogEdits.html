@@ -157,9 +157,10 @@
                     
                        <%
                            for(var i=0;i<content.length;i++){
+                           var src="/blog/detail/Article?name="+content[i]['name']+"&&title="+content[i]['title'];
                         %>
                            <tr>
-                               <td class="titleTd"><%= content[i]['title']%></td>
+                               <td class="titleTd"><a href=<%=src%>><%= content[i]['title']%></a></td>
                                <td class="catTd"><%= content[i]['cat']%></td>
                                <td>
                                    <%
@@ -176,7 +177,7 @@
                                </td>
                                <td>0</td>
                                <td><a href="">禁止评论</a></td>
-                               <td><a href="">编辑</a>|<a class="removeTr" href="javascript:void(0)">删除</a></td>
+                               <td><a href="javascript:void(0)" class="blogEdits_edit">编辑</a>|<a class="removeTr" href="javascript:void(0)">删除</a></td>
                            </tr>
                         <%
                            }
@@ -203,8 +204,6 @@
                                 <td><%=catsNum[0][cats[i]]%></td>
                                 <td><a href="javascript:void(0)" class="catEdit">编辑</a>/<a class="catDel" data-toggle="modal" href="#modal_del">删除</a></td>
                             </tr>
-
-
                         <%
                            }
                         %>

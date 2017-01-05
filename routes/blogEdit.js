@@ -4,6 +4,7 @@
 var express = require('express');
 var mongoose=require("../models/db");
 var cat=require("../models/cats");
+var user=require("../models/user");
 var content=require("../models/content");
 var async=require('async');
 
@@ -35,7 +36,7 @@ exports.blog_edit=function (req,res) {
             });
         },
         getCatsNum:function (callback) {
-            cat.Cat.find(function (err, docs) {
+            cat.Cat.find({name:req.session.username},function (err, docs) {
                 if (err) {
                     res.render('error');
                 } else {
@@ -57,7 +58,6 @@ exports.blog_edit=function (req,res) {
                     
                 }
             });
-            
         }
     }, function(err, results){
          // console.log(results['getCatsNum']+"000000000")
@@ -78,7 +78,6 @@ exports.blog_edit=function (req,res) {
 //将文本编辑器里的内容传给后台的数据库中  及其更新博 客内容
 exports.blog_updateBlog=function (req,res) {
     //上传内容
-
     if(req.body.role==1){   //销毁session
         req.session.username=null;
         res.json({msg:1});
@@ -97,9 +96,7 @@ exports.blog_updateBlog=function (req,res) {
         }else {
             titlePic=arr[0].match(srcReg)[1];
         }
-
-        
-        var entity = new content.Content({"name": req.session.username,"title":req.body.title,"titlePic":titlePic,"text":req.body.text,"content":req.body.con_text,"time":req.body.data,"cat":req.body.cat,click:""});
+        var entity = new content.Content({"name": req.session.username,"title":req.body.title,"titlePic":titlePic,"text":req.body.text,"content":req.body.con_text,"time":req.body.data,"cat":req.body.cat,click:0});
         entity.save();
         res.json({msg:1});
         // console.log(req.body.con_text)
@@ -137,6 +134,77 @@ exports.blog_updateBlog=function (req,res) {
                 res.json({msg:1});
             }
         });
+    }else if(req.body.role==6){  //获取初始化内容
+        content.Content.find({name:req.session.username,title:req.body.title,cat:req.body.cat},function (err, docs) {
+            if (err) {
+                res.render('error');
+            } else {
+                res.json({msg:docs});
+            }
+        });
+    }else if(req.body.role==7) {  //更新博客内容
+        var titlePic="";
+        var con=req.body.con_text;
+        //匹配图片（g表示匹配所有结果i表示区分大小写）
+        var imgReg = /<img.*?(?:>|\/>)/gi;
+        //匹配src属性
+        var srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
+        var arr = con[0].match(imgReg);
+        if(arr==null){
+            titlePic="/images/ex02.jpg"
+        }else {
+            titlePic=arr[0].match(srcReg)[1];
+        }
+        content.Content.update({"name":req.session.username,"title":req.body.title,"cat":req.body.cat},{$set:{"title":req.body.title,"content":req.body.con_text,"text":req.body.text,"titlePic":titlePic}},function (err, docs) {
+            
+        })
+        res.json({msg:1});
     }
-
 };
+
+
+
+exports.updateC=function (req, res) {
+    var imgurl4="";
+    var query5={name:req.session.username};
+    async.parallel({   //parallel函数是并行执行多个函数，每个函数都是立即执行，不需要等待其它函数先执行
+        getContent: function (callback) {
+            content.Content.find({name:req.session.username,title:req.query.title,cat:req.query.cat},function (err, docs) {
+                if (err) {
+                    res.render('error');
+                } else {
+                    callback(null, docs)
+                }
+            });
+        },
+        getImgUrl:function (callback) {
+            user.User.find(query5,function (err, docs) {
+                if(err){
+                    res.render('error');
+                }else {
+                    if(docs.length==0){
+
+                    }else {
+                        if(docs[0]['pic']==""){
+                            imgurl4="/images/touxiang/Koala.jpg"
+                        }else{
+                            imgurl4=urlHandle(docs[0]['pic'])
+                        }
+                        req.session.username=query5.name;
+                        req.session.password=query5.password;
+
+                    }
+                    callback(null,imgurl4);
+                }
+            });
+        }
+    }, function(err, results){
+        res.render('blogUpdate',{
+            title:"博客更新",
+            username:query5.name,
+            userSession:req.session.username,
+            contents:results['getContent'],
+            imgUrl:results['getImgUrl']
+        });
+    });
+}

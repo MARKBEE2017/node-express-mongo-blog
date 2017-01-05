@@ -93,6 +93,8 @@ app.get('/blog/user',user.user);
 app.post('/blog/user',user.userUpdate);
 app.get('/blogEdits',blogEdit.blog_edit);
 app.post('/blogEdits',blogEdit.blog_updateBlog)
+app.post('/blog/fwNum',blog.fwNum)
+app.get('/blog/detail/Update',blogEdit.updateC)
 app.all('/blog/detail/Article',blog.readAll)
 
 //使用模块

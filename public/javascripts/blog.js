@@ -147,17 +147,61 @@ $(function () {
     //博客查看全文
 
     $(".readAll").click(function () {
-        $.ajax({
-            url: '/blog/detail/Article',
-            type: 'GET',
-            data: {name:$(this).siblings().find(".name").html(), title:$(this).parent().siblings("h3").html()},
+        var name=$(this).siblings().find(".name").html();
+        var title=$(this).parent().siblings("h3").html();
+        $.ajax({          //增加点击数
+            url: '/blog/fwNum',
+            type: 'POST',
+            data: {name:name, title:title},
             success: function (msg) {
-               window.location.href="/blog/detail/Article?name="
+                // alert(msg.msg)
+                window.location.href="/blog/detail/Article?name="+name+"&&title="+title;
             },
             error: function (err) {
                 console.log("err")
             }
         });
     });
-    
+
+    $(".item_nt .tit").click(addClickNum);  //增加点击数
+    $(".time_edit .remove").click(function () {
+        $.ajax({
+            type: 'post',
+            url: '/blogEdits',
+            data:{role:"3",cat:$(".ArticleContent .right h2 small span").html(),title:$(".ArticleContent .right h2 span").html()},
+            success:function (msg) {
+              window.location.href="/blog/detail"
+            }
+        });
+    })
+    $(".time_edit .edit").click(function () {
+        window.location.href="/blog/detail/Update?title="+$(".ArticleContent .right h2 span").html()+"&&cat="+$(".ArticleContent .right h2 small span").html();
+    })
+    $('.blogEdits_edit').click(function () {
+        window.location.href="/blog/detail/Update?title="+$(this).parent().siblings(".titleTd").html()+"&&cat="+$(this).parent().siblings(".catTd").html();
+            });
 });
+
+
+
+
+
+
+
+
+
+
+function addClickNum() {
+    var name=$(this).siblings(".name").html();
+    var title=$(this).html();
+    $.ajax({          //增加点击数
+        url: '/blog/fwNum',
+        type: 'POST',
+        data: {name:name, title:title},
+        success: function (msg) {
+        },
+        error: function (err) {
+            console.log("err")
+        }
+    });
+}

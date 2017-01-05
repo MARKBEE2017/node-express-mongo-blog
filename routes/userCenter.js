@@ -19,5 +19,4 @@ exports.userUpdate=function (req,res) {
         req.session.username=req.body.name;
         res.send("修改成功！返回到<a href='/blog/detail'>微博首页</a>");
     });
-
 };

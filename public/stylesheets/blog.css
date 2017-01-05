@@ -90,6 +90,10 @@
 }
 .content .list_ct .blog_item_con{
     margin-top: 15px;
+    word-wrap: break-word;
+    word-break: normal;
+    height: 123px;
+    overflow: hidden;
 }
 .content .dateView{
     margin-top: 20px;
@@ -139,8 +143,35 @@
 }
 
 
-.ArticleContent .left{border: 1px solid #999999}
+.ArticleContent .left{border: 1px solid #D0D0D0}
+.ArticleContent .left .catNum{
+    float: right;margin-right: 44px}
 .ArticleContent img{width: 142px;margin-left: 23px}
+
+.ArticleContent .right{border: 1px solid #d0d0d0
+}
+.ArticleContent .right .article{    width: 100%;
+    word-wrap: break-word;
+    word-break: normal;
+}
+.ArticleContent .right .time_edit{float: right}
+.ArticleContent .right .time_edit .time{color: #999999}
+.ArticleContent .right .time_edit .edit a{margin: 0 3px}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @media screen and (min-width:768px){
