@@ -167,9 +167,9 @@
                 <span class="time"><%=contents[0]['time']%>&nbsp;&nbsp;<%=contents[0]['click']%>次访问</span>
                 <span class="edit">
                     <a href="">评论</a>
-                    <a href="">收藏</a>
+                    <a href="javascript:void(0)" class="collect" >收藏</a>
                     <%
-                      if(userSession){
+                      if(userSession==username){
                     %>
                     <a href="javascript:void(0)" class="edit">编辑</a>
                     <a href="javascript:void(0)" class="remove">删除</a>

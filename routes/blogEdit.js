@@ -159,6 +159,8 @@ exports.blog_updateBlog=function (req,res) {
             
         })
         res.json({msg:1});
+    }else if(req.body.role==8){    //收藏文章
+        
     }
 };
 
@@ -207,4 +209,11 @@ exports.updateC=function (req, res) {
             imgUrl:results['getImgUrl']
         });
     });
+}
+
+
+
+function urlHandle(url) {
+    var str=url.replace(/\\/g,"/");
+    return str.replace(/public/g,"")
 }

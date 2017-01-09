@@ -66,7 +66,7 @@ $(function () {
             dataType:'json',
             success:function (msg) {
                 if(msg.msg==1){
-                    window.location.href="/blog/user/login";
+                    window.location.href="/blog";
                 }
             },
             error:function (err) {
@@ -174,6 +174,15 @@ $(function () {
             }
         });
     })
+
+    $(".time_edit .collect").click(function () {   //收藏文章
+        $.ajax({
+            type:"post",
+            url:"/blogEdits",
+            data:{role:"8",cat:$(".ArticleContent .right h2 small span").html(),title:$(".ArticleContent .right h2 span").html()}
+        });
+    })
+
     $(".time_edit .edit").click(function () {
         window.location.href="/blog/detail/Update?title="+$(".ArticleContent .right h2 span").html()+"&&cat="+$(".ArticleContent .right h2 small span").html();
     })

@@ -104,11 +104,7 @@
 .content .dateView small{
     margin: 0 8px;}
 
-.content .title_nt{
-    background-image: url(../images/r_title_bg.jpg);
-    background-repeat: repeat-x;
-    background-position: 28px center;
-}
+
 .content .item_nt li{
     height: 25px;
     line-height: 25px;

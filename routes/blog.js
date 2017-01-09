@@ -1,6 +1,4 @@
 var express = require('express');
-var router = express.Router();
-var mongoose=require("../models/db");
 var user=require("../models/user");
 var cat=require("../models/cats");
 var rs=require("rs");
@@ -16,6 +14,7 @@ var content=require("../models/content");
 // });
 
 exports.blog1=function (req,res) {
+    var imgur2="";
     async.parallel({   //parallel函数是并行执行多个函数，每个函数都是立即执行，不需要等待其它函数先执行
         getContentAll:function (callback) {
             content.Content.find(function (err, docs) {
@@ -34,6 +33,24 @@ exports.blog1=function (req,res) {
                     callback(null, docs)
                 }
             })
+        },
+        getImgUrl:function (callback) {
+            if(req.session.username){
+                user.User.find({name:req.session.username},function (err, docs) {
+                    if(err){
+                        res.render('error');
+                    }else {
+                        if(docs[0]['pic']==""){
+                            imgur2="/images/touxiang/Koala.jpg"
+                        }else{
+                            imgur2=urlHandle(docs[0]['pic'])
+                        }
+                        callback(null,imgur2);
+                    }
+                })
+            }else {
+                callback(null,"00");
+            }
         }
     }, function(err, results){
         res.render('blog', {
